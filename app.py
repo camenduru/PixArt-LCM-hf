@@ -9,20 +9,21 @@ import random
 import gradio as gr
 import numpy as np
 import uuid
-from diffusers import PixArtAlphaPipeline, LatentConsistencyModelPipeline, LCMScheduler
+from diffusers import PixArtAlphaPipeline, LCMScheduler
 import torch
 from typing import Tuple
 from datetime import datetime
 
 
-DESCRIPTION = """![Logo](./pixart-lcm.png)
-        # PixArt-Alpha LCM 1024px
-        #### [PixArt-Alpha 1024px](https://github.com/PixArt-alpha/PixArt-alpha) is a transformer-based text-to-image diffusion system trained on text embeddings from T5. This demo uses the [PixArt-alpha/PixArt-XL-2-1024-MS](https://huggingface.co/PixArt-alpha/PixArt-XL-2-1024-MS) checkpoint.
+DESCRIPTION = """![Logo](https://raw.githubusercontent.com/PixArt-alpha/PixArt-alpha.github.io/master/static/images/pixart-lcm.png)
+        # PixArt-LCM 1024px
+        #### [PixArt-Alpha 1024px](https://github.com/PixArt-alpha/PixArt-alpha) is a transformer-based text-to-image diffusion system trained on text embeddings from T5. This demo uses the [PixArt-alpha/PixArt-LCM-XL-2-1024-MS](https://huggingface.co/PixArt-alpha/PixArt-LCM-XL-2-1024-MS) checkpoint.
+        #### [LCMs](https://github.com/luosiallen/latent-consistency-model) is a diffusion distillation method which predict PF-ODE's solution directly in latent space, achieving super fast inference with few steps.
         #### English prompts ONLY; 提示词仅限英文
         Don't want to queue? Try [OpenXLab](https://openxlab.org.cn/apps/detail/PixArt-alpha/PixArt-alpha) or [Google Colab Demo](https://colab.research.google.com/drive/1jZ5UZXk7tcpTfVwnX33dDuefNMcnW9ME?usp=sharing).
         """
 if not torch.cuda.is_available():
-    DESCRIPTION += "\n<p>Running on CPU �� This demo does not work on CPU.</p>"
+    DESCRIPTION += "\n<p>Running on CPU 🥶 This demo does not work on CPU.</p>"
 
 MAX_SEED = np.iinfo(np.int32).max
 CACHE_EXAMPLES = torch.cuda.is_available() and os.getenv("CACHE_EXAMPLES", "1") == "1"
@@ -103,15 +104,10 @@ def apply_style(style_name: str, positive: str, negative: str = "") -> Tuple[str
 if torch.cuda.is_available():
 
     pipe = PixArtAlphaPipeline.from_pretrained(
-        # "PixArt-alpha/PixArt-LCM-XL-2-1024-MS",
-        'output_cv/pixartlcm-xl2-img1024_ft_singlebr_MJ1-5filter_vae_lr2e5_ema80/checkpoints/epoch_1_step_1600_diffusers',
+        "PixArt-alpha/PixArt-LCM-XL-2-1024-MS",
         torch_dtype=torch.float16,
         use_safetensors=True,
     )
-
-    if os.getenv('CONSISTENCY_DECODER', False):
-        print("Using DALL-E 3 Consistency Decoder")
-        pipe.vae = ConsistencyDecoderVAE.from_pretrained("openai/consistency-decoder", torch_dtype=torch.float16)
 
     if ENABLE_CPU_OFFLOAD:
         pipe.enable_model_cpu_offload()
@@ -211,7 +207,13 @@ with gr.Blocks(css="scripts/style.css") as demo:
         result = gr.Gallery(label="Result", columns=NUM_IMAGES_PER_PROMPT, show_label=False)
     with gr.Accordion("Advanced options", open=False):
         with gr.Row():
-            use_negative_prompt = gr.Checkbox(label="Use negative prompt", value=False, visible=False)
+            use_negative_prompt = gr.Checkbox(label="Use negative prompt", value=False, visible=True)
+            negative_prompt = gr.Text(
+                label="Negative prompt",
+                max_lines=1,
+                placeholder="Enter a negative prompt",
+                visible=True,
+            )
         style_selection = gr.Radio(
             show_label=True,
             container=True,
@@ -219,12 +221,6 @@ with gr.Blocks(css="scripts/style.css") as demo:
             choices=STYLE_NAMES,
             value=DEFAULT_STYLE_NAME,
             label="Image Style",
-        )
-        negative_prompt = gr.Text(
-            label="Negative prompt",
-            max_lines=1,
-            placeholder="Enter a negative prompt",
-            visible=False,
         )
         seed = gr.Slider(
             label="Seed",

@@ -10,4 +10,5 @@ pinned: false
 license: openrail
 ---
 
-Check out the configuration reference at https://huggingface.co/docs/hub/spaces-config-reference
+Inference Code: https://github.com/PixArt-alpha/PixArt-alpha
+Paper: https://arxiv.org/abs/2310.00426

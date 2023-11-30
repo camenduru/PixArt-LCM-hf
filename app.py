@@ -18,7 +18,7 @@ DESCRIPTION = """![Logo](https://raw.githubusercontent.com/PixArt-alpha/PixArt-a
         #### [PixArt-Alpha 1024px](https://github.com/PixArt-alpha/PixArt-alpha) is a transformer-based text-to-image diffusion system trained on text embeddings from T5. This demo uses the [PixArt-alpha/PixArt-LCM-XL-2-1024-MS](https://huggingface.co/PixArt-alpha/PixArt-LCM-XL-2-1024-MS) checkpoint.
         #### [LCMs](https://github.com/luosiallen/latent-consistency-model) is a diffusion distillation method which predict PF-ODE's solution directly in latent space, achieving super fast inference with few steps.
         #### English prompts ONLY; 提示词仅限英文
-        Don't want to queue? Try [OpenXLab](https://openxlab.org.cn/apps/detail/PixArt-alpha/PixArt-alpha) or [Google Colab Demo](https://colab.research.google.com/drive/1jZ5UZXk7tcpTfVwnX33dDuefNMcnW9ME?usp=sharing).
+        ### <span style='color: red;'> Don't want to queue or Don't get satisfied results? Try original demo: [PixArt-alpha](https://huggingface.co/spaces/PixArt-alpha/PixArt-alpha) [OpenXLab](https://openxlab.org.cn/apps/detail/PixArt-alpha/PixArt-alpha) or [Google Colab Demo](https://colab.research.google.com/drive/1jZ5UZXk7tcpTfVwnX33dDuefNMcnW9ME?usp=sharing).
         """
 if not torch.cuda.is_available():
     DESCRIPTION += "\n<p>Running on CPU 🥶 This demo does not work on CPU.</p>"

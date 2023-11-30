@@ -1,11 +1,9 @@
 #!/usr/bin/env python
 from __future__ import annotations
+
 import os
-import sys
-from pathlib import Path
-current_file_path = Path(__file__).resolve()
-sys.path.insert(0, str(current_file_path.parent.parent))
 import random
+import uuid
 import gradio as gr
 import numpy as np
 import uuid
@@ -30,10 +28,8 @@ CACHE_EXAMPLES = torch.cuda.is_available() and os.getenv("CACHE_EXAMPLES", "1") 
 MAX_IMAGE_SIZE = int(os.getenv("MAX_IMAGE_SIZE", "2048"))
 USE_TORCH_COMPILE = os.getenv("USE_TORCH_COMPILE", "0") == "1"
 ENABLE_CPU_OFFLOAD = os.getenv("ENABLE_CPU_OFFLOAD", "0") == "1"
-PORT = int(os.getenv("DEMO_PORT", "15432"))
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-
 
 style_list = [
     {
@@ -94,6 +90,7 @@ STYLE_NAMES = list(styles.keys())
 DEFAULT_STYLE_NAME = "(No style)"
 NUM_IMAGES_PER_PROMPT = 1
 
+
 def apply_style(style_name: str, positive: str, negative: str = "") -> Tuple[str, str]:
     p, n = styles.get(style_name, styles[DEFAULT_STYLE_NAME])
     if not negative:
@@ -128,10 +125,7 @@ if torch.cuda.is_available():
 
 
 def save_image(img):
-    unique_name = str(uuid.uuid4()) + '.png'
-    save_path = os.path.join(f'output/online_demo_img/{datetime.now().date()}')
-    os.makedirs(save_path, exist_ok=True)
-    unique_name = os.path.join(save_path, unique_name)
+    unique_name = str(uuid.uuid4()) + ".png"
     img.save(unique_name)
     return unique_name
 
@@ -192,7 +186,7 @@ examples = [
     "The parametric hotel lobby is a sleek and modern space with plenty of natural light. The lobby is spacious and open with a variety of seating options. The front desk is a sleek white counter with a parametric design. The walls are a light blue color with parametric patterns. The floor is a light wood color with a parametric design. There are plenty of plants and flowers throughout the space. The overall effect is a calm and relaxing space. occlusion, moody, sunset, concept art, octane rendering, 8k, highly detailed, concept art, highly detailed, beautiful scenery, cinematic, beautiful light, hyperreal, octane render, hdr, long exposure, 8K, realistic, fog, moody, fire and explosions, smoke, 50mm f2.8",
 ]
 
-with gr.Blocks(css="scripts/style.css") as demo:
+with gr.Blocks(css="style.css") as demo:
     gr.Markdown(DESCRIPTION)
     gr.DuplicateButton(
         value="Duplicate Space for private use",

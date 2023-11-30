@@ -13,7 +13,7 @@ from typing import Tuple
 from datetime import datetime
 
 
-DESCRIPTION = """![Logo](https://raw.githubusercontent.com/PixArt-alpha/PixArt-alpha.github.io/master/static/images/pixart-lcm.png)
+DESCRIPTION = """![Logo](https://raw.githubusercontent.com/PixArt-alpha/PixArt-alpha.github.io/master/static/images/pixart-lcm2.png)
         # PixArt-LCM 1024px
         #### [PixArt-Alpha 1024px](https://github.com/PixArt-alpha/PixArt-alpha) is a transformer-based text-to-image diffusion system trained on text embeddings from T5. This demo uses the [PixArt-alpha/PixArt-LCM-XL-2-1024-MS](https://huggingface.co/PixArt-alpha/PixArt-LCM-XL-2-1024-MS) checkpoint.
         #### [LCMs](https://github.com/luosiallen/latent-consistency-model) is a diffusion distillation method which predict PF-ODE's solution directly in latent space, achieving super fast inference with few steps.

@@ -9,7 +9,7 @@ import random
 import gradio as gr
 import numpy as np
 import uuid
-from diffusers import PixArtAlphaPipeline, LCMScheduler
+from diffusers import PixArtAlphaPipeline, LatentConsistencyModelPipeline, LCMScheduler
 import torch
 from typing import Tuple
 from datetime import datetime
@@ -109,6 +109,10 @@ if torch.cuda.is_available():
         use_safetensors=True,
     )
 
+    if os.getenv('CONSISTENCY_DECODER', False):
+        print("Using DALL-E 3 Consistency Decoder")
+        pipe.vae = ConsistencyDecoderVAE.from_pretrained("openai/consistency-decoder", torch_dtype=torch.float16)
+
     if ENABLE_CPU_OFFLOAD:
         pipe.enable_model_cpu_offload()
     else:
@@ -160,6 +164,7 @@ def generate(
 
     images = pipe(
         prompt=prompt,
+        negative_prompt=negative_prompt,
         width=width,
         height=height,
         guidance_scale=0.,
